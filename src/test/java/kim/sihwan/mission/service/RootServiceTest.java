@@ -1,12 +1,13 @@
 package kim.sihwan.mission.service;
 
+import kim.sihwan.mission.exception.customException.InvalidProductTypeException;
+import kim.sihwan.mission.exception.customException.ProductNotFoundException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.stream.Stream;
 
@@ -27,7 +28,7 @@ public class RootServiceTest {
     @ParameterizedTest
     @ValueSource(strings = {"과자", "사탕"})
     void 목록조회_없는유형_요청(final String type) {
-        assertThrows(IllegalStateException.class, () -> rootService.requestProductList(type));
+        assertThrows(InvalidProductTypeException.class, () -> rootService.requestProductList(type));
     }
 
     @ParameterizedTest
@@ -39,7 +40,7 @@ public class RootServiceTest {
     @ParameterizedTest
     @MethodSource("failParameterConstructor")
     void 가격조회_없는상품_요청(final String type, final String name) {
-        assertThrows(HttpClientErrorException.class, () -> rootService.requestProductInfo(type, name));
+        assertThrows(ProductNotFoundException.class, () -> rootService.requestProductInfo(type, name));
     }
 
     static Stream<Arguments> successParameterConstructor() {
