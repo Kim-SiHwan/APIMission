@@ -1,0 +1,39 @@
+<html xmlns xmlns:th="http://www.w3.org/1999/xhtml" : th="http://www.thymeleaf.org">
+<head>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script>window.jQuery || document.write('<script src="@{/js/vendor/jquery-3.4.1.min.js}"><\/script>')</script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+    <title>Title</title>
+
+</head>
+<meta charset="UTF-8">
+<title>Title</title>
+</head>
+<body>
+<div class="container">
+
+    <select class="form-select form-select-sm" id="selectTypeList">
+        <option selected>상품 유형을 선택해주세요</option>
+        <option value="과일">과일</option>
+        <option value="채소">채소</option>
+    </select>
+
+</div>
+
+<script th:inline="javascript">
+
+    $(document).on('ready',function (e){
+        let type;
+        $(document).on('change','#selectTypeList',function (e){
+            type = $('#selectTypeList').val();
+        })
+    })
+
+</script>
+
+</body>
+</html>
+
+
