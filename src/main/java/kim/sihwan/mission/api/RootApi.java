@@ -6,11 +6,8 @@ import java.util.List;
 
 public interface RootApi {
 
-    String requestProductToken();
-
     List<String> requestProductList();
 
     ProductInfo requestProductInfo(String name);
-
 
 }
