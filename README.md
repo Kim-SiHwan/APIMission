@@ -26,14 +26,17 @@ TODO
   - [X] api 주소 인코딩
   - [X] 예외 처리 
   - [X] 파라미터 Validation
+  - [ ] Swagger 문서화
   - [ ] 도커 컴포즈
   - [X] 토큰 관리  
     - [X] 토큰을 remote 저장소에 저장
   
 ### 브라우저
-
+데모 
 ![images/main.png](image/main.png)
 
+실제 화면
+![images/real.png](image/real.PNG)
 - [X] 상품의 분류를 선택할 수 있는 기능 제공
   - [X] 채소/과일 드롭다운 제공
   - [X] 상품 목록 테이블
@@ -57,7 +60,7 @@ TODO
 - Thymeleaf
 - Lombok
 ---
-## API 스펙
+## API Docs
 
 TODO
 
