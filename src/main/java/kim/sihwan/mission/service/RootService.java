@@ -17,12 +17,12 @@ public class RootService {
 
     private final ApiConstructor apiConstructor;
 
-    public List<String> requestProductList(String type){
+    public List<String> requestProductList(final String type){
         RootApi api = apiConstructor.selectApi(type);
         return api.requestProductList();
     }
 
-    public ProductInfo requestProductInfo(String type, String name){
+    public ProductInfo requestProductInfo(final String type,final String name){
         RootApi api = apiConstructor.selectApi(type);
         return api.requestProductInfo(name);
     }

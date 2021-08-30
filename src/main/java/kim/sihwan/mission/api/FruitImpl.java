@@ -2,6 +2,9 @@ package kim.sihwan.mission.api;
 
 import kim.sihwan.mission.common.UrlType;
 import kim.sihwan.mission.dto.ProductInfo;
+import kim.sihwan.mission.exception.customException.ApiServerException;
+import kim.sihwan.mission.exception.customException.ProductNotFoundException;
+import kim.sihwan.mission.exception.customException.UnknownServerException;
 import kim.sihwan.mission.util.CustomDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +13,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -22,7 +26,7 @@ public class FruitImpl implements RootApi {
 
     private final CustomDecoder decoder;
     private final RestTemplate restTemplate;
-    private final RedisTemplate<String,String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public List<String> requestProductList() {
@@ -31,16 +35,16 @@ public class FruitImpl implements RootApi {
     }
 
     @Override
-    public ProductInfo requestProductInfo(final String name){
+    public ProductInfo requestProductInfo(final String name) {
         String encodedApiUrl = UrlType.FRUIT_INFO.getEncodedUrl();
         return sendRequestFruitInfo(encodedApiUrl, name);
     }
 
-    public String bringFruitTokenFromRedis(){
+    public String bringFruitTokenFromRedis() {
         String accessToken = redisTemplate.opsForValue().get("fruitToken");
-        log.info("Redis 과일 토큰 데이터 -> {}",accessToken);
+        log.info("Redis 과일 토큰 데이터 -> {}", accessToken);
 
-        if(checkTokenIsEmptyOrNull(accessToken))
+        if (checkTokenIsEmptyOrNull(accessToken))
             return requestFruitToken();
         return accessToken;
     }
@@ -49,67 +53,78 @@ public class FruitImpl implements RootApi {
         String encodedApiUrl = UrlType.FRUIT_TOKEN.getEncodedUrl();
         String accessToken = sendRequestFruitToken(encodedApiUrl);
 
-        redisTemplate.opsForValue().set("fruitToken",accessToken);
+        redisTemplate.opsForValue().set("fruitToken", accessToken);
 
         return accessToken;
     }
 
-    private ProductInfo sendRequestFruitInfo(final String encodedApiUrl, final String name){
-        String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl) + name;
-        log.info("과일 정보 요청 URL -> {}",decodedApiUrl);
+    private String sendRequestFruitToken(final String encodedApiUrl) {
+        String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl);
 
-        ResponseEntity<Map<String,String>> responseEntity = restTemplate.exchange(decodedApiUrl, HttpMethod.GET, makeHeader(), new ParameterizedTypeReference<>() {});
-        log.info("과일 정보 응답 데이터 -> {}",responseEntity.getBody());
+        ResponseEntity<Map<String, String>> responseEntity = null;
+
+        try {
+            responseEntity = restTemplate.exchange(decodedApiUrl, HttpMethod.GET, new HttpEntity<>(""), new ParameterizedTypeReference<>() {});
+            log.info("과일가게 토큰 요청 URL -> {}", decodedApiUrl);
+        } catch (Exception e) {
+            throw new ApiServerException("API 서버에서 토큰을 정상적으로 받아올 수 없습니다.");
+        }
 
         checkErrorStatus(responseEntity.getStatusCode());
-        Map<String,String> map = responseEntity.getBody();
-        return ProductInfo.toDto(map.get("name"), map.get("price"));
+
+        log.info("과일가게 토큰 응답 데이터 {}", responseEntity.getBody());
+        Map<String, String> map = responseEntity.getBody();
+
+        return map.get("accessToken");
     }
 
-    private List<String> sendRequestFruitList(final String encodedApiUrl){
+    private List<String> sendRequestFruitList(final String encodedApiUrl) {
         String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl);
-        log.info("과일 목록 요청 URL -> {}",decodedApiUrl);
+        log.info("과일 목록 요청 URL -> {}", decodedApiUrl);
 
         ResponseEntity<List<String>> responseEntity = restTemplate.exchange(decodedApiUrl, HttpMethod.GET, makeHeader(), new ParameterizedTypeReference<>() {});
-        log.info("과일 목록 응답 데이터 -> {}",responseEntity.getBody());
+        log.info("과일 목록 응답 데이터 -> {}", responseEntity.getBody());
 
         checkErrorStatus(responseEntity.getStatusCode());
 
         return responseEntity.getBody();
     }
 
-    private HttpEntity<String> makeHeader(){
+    private ProductInfo sendRequestFruitInfo(final String encodedApiUrl, final String name) {
+        String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl) + name;
+        log.info("과일 정보 요청 URL -> {}", decodedApiUrl);
+
+        ResponseEntity<Map<String, String>> responseEntity = null;
+        try {
+            responseEntity = restTemplate.exchange(decodedApiUrl, HttpMethod.GET, makeHeader(), new ParameterizedTypeReference<>() {});
+            log.info("과일 정보 응답 데이터 -> {}", responseEntity.getBody());
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new ProductNotFoundException("존재하지 않는 상품을 요청했습니다.");
+        }
+
+        checkErrorStatus(responseEntity.getStatusCode());
+        Map<String, String> map = responseEntity.getBody();
+        return ProductInfo.toDto(map.get("name"), map.get("price"));
+    }
+
+    private HttpEntity<String> makeHeader() {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.set("Authorization",bringFruitTokenFromRedis());
+        httpHeaders.set("Authorization", bringFruitTokenFromRedis());
 
-        log.info("과일가게 요청 생성 헤더 {}",httpHeaders);
+        log.info("과일가게 요청 생성 헤더 {}", httpHeaders);
         return new HttpEntity<>(httpHeaders);
     }
 
-    private String sendRequestFruitToken(final String encodedApiUrl){
-        String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl);
-
-        ResponseEntity<Map<String,String>> responseEntity = restTemplate.exchange(decodedApiUrl, HttpMethod.GET, new HttpEntity<>(""), new ParameterizedTypeReference<>() {});
-        log.info("과일가게 토큰 요청 URL -> {}",decodedApiUrl);
-
-        checkErrorStatus(responseEntity.getStatusCode());
-
-        log.info("과일가게 토큰 응답 데이터 {}",responseEntity.getBody());
-        Map<String,String> map = responseEntity.getBody();
-
-        return map.get("accessToken");
-    }
-
-    private void checkErrorStatus(HttpStatus status){
-        log.info("과일가게 응답 상태 -> {}",status);
-        if(status.isError()){
-            throw new IllegalStateException("과일가게 토큰 요청 에러 발생");
+    private void checkErrorStatus(final HttpStatus status) {
+        log.info("과일가게 응답 상태 -> {}", status);
+        if (status.isError()) {
+            throw new UnknownServerException("파악하지 못한 오류가 발생했습니다.");
         }
     }
 
-    private boolean checkTokenIsEmptyOrNull(String accessToken){
+    private boolean checkTokenIsEmptyOrNull(String accessToken) {
         return Strings.isBlank(accessToken);
     }
 
