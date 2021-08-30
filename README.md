@@ -25,7 +25,7 @@ TODO
 - [ ] 기타
   - [X] api 주소 인코딩
   - [ ] 예외 처리 
-  - [ ] 파라미터 Validation
+  - [X] 파라미터 Validation
   - [ ] 도커 컴포즈
   - [X] 토큰 관리  
     - [X] 토큰을 remote 저장소에 저장
