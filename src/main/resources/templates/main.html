@@ -1,70 +1,89 @@
-<html xmlns xmlns:th="http://www.w3.org/1999/xhtml" : th="http://www.thymeleaf.org">
+<html xmlns xmlns:th = "http://www.w3.org/1999/xhtml" : th = "http://www.thymeleaf.org">
 <head>
-    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src = "https://code.jquery.com/jquery-1.12.0.min.js"></script>
     <script>window.jQuery || document.write('<script src="@{/js/vendor/jquery-3.4.1.min.js}"><\/script>')</script>
+    <link rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <title>김시환입니다</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-
+    <meta charset = "UTF-8">
     <title>Title</title>
 
 </head>
-<meta charset="UTF-8">
-<title>Title</title>
-</head>
-<body>
-<div class="container">
 
-    <div style="margin-top: 350px">
-        <select class="form-select form-select-sm" id="selectTypeList">
+<body>
+<div class = "container">
+    <div style = "margin-top: 350px">
+        <select class = "form-select form-select-sm" id = "selectTypeList" style = "display: inline; height: 40px">
             <option selected>상품 유형을 선택해주세요</option>
-            <option value="과일">과일</option>
-            <option value="채소">채소</option>
+            <option value = "과일">과일</option>
+            <option value = "채소">채소</option>
         </select>
-        <table class="table table-hover" style="width: 650px; margin-top: 30px">
-            <thead align="center">
-            <th width="50">번호</th>
-            <th width="150">품목</th>
+        <input id = "inputProductName" type = "text" class = "form-control" style = "width: 300px; display: inline">
+        <button class = "btn btn-primary" id = "requestProductInfoButton">조회</button>
+
+        <label id = "productName" style = "font-size: 20px"></label>
+        <label id = "productPrice" style = "font-size: 20px"></label>
+        <table class = "table table-hover" style = "width: 850px; margin-top: 30px">
+            <thead align = "center">
+            <th width = "50">번호</th>
+            <th width = "150">품목</th>
             </thead>
-            <tbody id="tbody">
+            <tbody id = "tbody">
 
             </tbody>
         </table>
     </div>
-
-
 </div>
 
-<script th:inline="javascript">
+<script th:inline = "javascript">
 
-    $(document).on('ready',function (e){
+    $(document).on('ready', function (e) {
         let type;
-
-        $(document).on('click','#requestProductInfoButton',function (e){
+        $(document).on('click', '#requestProductInfoButton', function (e) {
+            let targetName = $('#inputProductName').val();
+            if (!isValid(type, targetName)) {
+                document.getElementById('inputProductName').focus();
+                return false;
+            }
             $.ajax({
-                url:'/api/v1/product/list',
-                method:'GET',
-                data:{type:type,name:'토마토'}
-
+                url: '/api/v1/product/list',
+                method: 'GET',
+                data: {type: type, name: targetName},
+                success: function (res) {
+                    $('#productName').html("<b>" + res.name + "의 현재 가격 : " + "</b>");
+                    $('#productPrice').html("<b>" + res.price + "</b>");
+                },
+                error: function (e) {
+                    alert(e.responseJSON.message);
+                }
             })
         })
-        $(document).on('change','#selectTypeList',function (e){
+        $(document).on('change', '#selectTypeList', function (e) {
             type = $('#selectTypeList').val();
             $.ajax({
-                url:'/api/v1/product',
-                method:'GET',
-                data:{type:type}
-            }).success(res=>{
-                drawList(res);
+                url: '/api/v1/product',
+                method: 'GET',
+                data: {type: type},
+                success: function (res) {
+                    drawList(res)
+                },
+                error: function (e) {
+                    alert(e.responseJSON.message);
+                }
             })
         })
+
         function drawList(data) {
             let str = "";
             for (let i = 0; i < data.length; i++) {
                 let list = data[i];
-                console.log(list);
-                str += "<tr align='center'><td>" + (i+1) + "</td>" + "<td>" + list + "</td></tr>";
+                str += "<tr align='center'><td>" + (i + 1) + "</td>" + "<td>" + list + "</td></tr>";
             }
             $('#tbody').html(str);
+        }
+
+        function isValid(type, name) {
+            return !(type === "" || name === "" || type.trim() === "" || name.trim() === "");
         }
     })
 
