@@ -5,12 +5,12 @@ import kim.sihwan.mission.common.UrlType;
 import kim.sihwan.mission.util.CustomDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,9 +23,37 @@ public class VegetableImpl implements VegetableApi {
     private final RestTemplate restTemplate;
 
     @Override
-    public String requestToken() {
+    public String requestVegetableToken() {
         final String encodedApiUrl = UrlType.VEGETABLE_TOKEN.getEncodedUrl();
         return sendRequest(encodedApiUrl);
+    }
+
+    @Override
+    public List<String> requestVegetableList() {
+        String encodedApiUrl = UrlType.VEGETABLE_LIST.getEncodedUrl();
+        return sendRequestVegetableList(encodedApiUrl);
+    }
+
+    private List<String> sendRequestVegetableList(final String encodedApiUrl){
+        String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl);
+        log.info("채소 목록 요청 URL -> {}",decodedApiUrl);
+
+        ResponseEntity<List<String>> responseEntity = restTemplate.exchange(decodedApiUrl, HttpMethod.GET, makeHeader(), new ParameterizedTypeReference<List<String>>() {});
+        log.info("채소 목록 응답 데이터 -> {}",responseEntity.getBody());
+
+        checkErrorStatus(responseEntity.getStatusCode());
+
+        return responseEntity.getBody();
+    }
+
+    private HttpEntity<String> makeHeader(){
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.set("Authorization",requestVegetableToken());
+
+        log.info("채소가게 요청 생성 헤더 {}",httpHeaders);
+        return new HttpEntity<>(httpHeaders);
     }
 
     private String sendRequest(String encodedApiUrl){
