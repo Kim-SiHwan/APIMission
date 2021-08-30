@@ -3,7 +3,7 @@ package kim.sihwan.mission.service;
 
 import kim.sihwan.mission.api.ApiConstructor;
 import kim.sihwan.mission.api.RootApi;
-import kim.sihwan.mission.dto.Info;
+import kim.sihwan.mission.dto.ProductInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class RootService {
         return api.requestProductList();
     }
 
-    public Info requestProductInfo(String type, String name){
+    public ProductInfo requestProductInfo(String type, String name){
         RootApi api = apiConstructor.selectApi(type);
         return api.requestProductInfo(name);
     }

@@ -1,7 +1,7 @@
 package kim.sihwan.mission.api;
 
 import kim.sihwan.mission.common.UrlType;
-import kim.sihwan.mission.dto.Info;
+import kim.sihwan.mission.dto.ProductInfo;
 import kim.sihwan.mission.util.CustomDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,12 +34,12 @@ public class FruitImpl implements RootApi {
     }
 
     @Override
-    public Info requestProductInfo(final String name){
+    public ProductInfo requestProductInfo(final String name){
         String encodedApiUrl = UrlType.FRUIT_INFO.getEncodedUrl();
         return sendRequestFruitInfo(encodedApiUrl, name);
     }
 
-    private Info sendRequestFruitInfo(final String encodedApiUrl, final String name){
+    private ProductInfo sendRequestFruitInfo(final String encodedApiUrl, final String name){
         String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl) + name;
         log.info("과일 정보 요청 URL -> {}",decodedApiUrl);
 
@@ -48,7 +48,7 @@ public class FruitImpl implements RootApi {
 
         checkErrorStatus(responseEntity.getStatusCode());
         Map<String,String> map = responseEntity.getBody();
-        return Info.toDto(map.get("name"), map.get("price"));
+        return ProductInfo.toDto(map.get("name"), map.get("price"));
     }
 
     private List<String> sendRequestFruitList(final String encodedApiUrl){

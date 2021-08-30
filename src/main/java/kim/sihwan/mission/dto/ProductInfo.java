@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class Info {
+public class ProductInfo {
     private final String name;
     private final String price;
 
-    public static Info toDto(String name, String price){
-        return Info.builder()
+    public static ProductInfo toDto(String name, String price){
+        return ProductInfo.builder()
                 .name(name)
                 .price(price)
                 .build();
