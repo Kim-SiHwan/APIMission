@@ -41,10 +41,6 @@
         let type;
         $(document).on('click', '#requestProductInfoButton', function (e) {
             let targetName = $('#inputProductName').val();
-            if (!isValid(type, targetName)) {
-                document.getElementById('inputProductName').focus();
-                return false;
-            }
             $.ajax({
                 url: '/api/v1/product/list',
                 method: 'GET',
@@ -82,9 +78,6 @@
             $('#tbody').html(str);
         }
 
-        function isValid(type, name) {
-            return !(type === "" || name === "" || type.trim() === "" || name.trim() === "");
-        }
     })
 
 </script>
