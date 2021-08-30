@@ -14,11 +14,23 @@
 <body>
 <div class="container">
 
-    <select class="form-select form-select-sm" id="selectTypeList">
-        <option selected>상품 유형을 선택해주세요</option>
-        <option value="과일">과일</option>
-        <option value="채소">채소</option>
-    </select>
+    <div style="margin-top: 350px">
+        <select class="form-select form-select-sm" id="selectTypeList">
+            <option selected>상품 유형을 선택해주세요</option>
+            <option value="과일">과일</option>
+            <option value="채소">채소</option>
+        </select>
+        <table class="table table-hover" style="width: 650px; margin-top: 30px">
+            <thead align="center">
+            <th width="50">번호</th>
+            <th width="150">품목</th>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+    </div>
+
 
 </div>
 
@@ -26,9 +38,34 @@
 
     $(document).on('ready',function (e){
         let type;
+
+        $(document).on('click','#requestProductInfoButton',function (e){
+            $.ajax({
+                url:'/api/v1/product/list',
+                method:'GET',
+                data:{type:type,name:'토마토'}
+
+            })
+        })
         $(document).on('change','#selectTypeList',function (e){
             type = $('#selectTypeList').val();
+            $.ajax({
+                url:'/api/v1/product',
+                method:'GET',
+                data:{type:type}
+            }).success(res=>{
+                drawList(res);
+            })
         })
+        function drawList(data) {
+            let str = "";
+            for (let i = 0; i < data.length; i++) {
+                let list = data[i];
+                console.log(list);
+                str += "<tr align='center'><td>" + (i+1) + "</td>" + "<td>" + list + "</td></tr>";
+            }
+            $('#tbody').html(str);
+        }
     })
 
 </script>
