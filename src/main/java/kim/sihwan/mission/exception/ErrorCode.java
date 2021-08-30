@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    NOT_BLANK("E01", "필수 값이 누락되었습니다."),
+    NOT_BLANK("E01", "상품 정보는 비어있을 수 없습니다."),
     INVALID_TYPE("E02","존재하지 않는 유형입니다."),
     PRODUCT_NOT_FOUND("E03","존재하지 않는 품목입니다."),
 
