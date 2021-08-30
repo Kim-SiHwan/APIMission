@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -18,8 +20,13 @@ public class FruitController {
     private final FruitService fruitService;
 
     @GetMapping
-    public ResponseEntity<String> requestFruitToken(){
+    public ResponseEntity<String> requestFruitToken() {
         return new ResponseEntity<>(fruitService.requestFruitToken(), HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<String>> requestFruitList() {
+        return new ResponseEntity<>(fruitService.requestFruitList(), HttpStatus.OK);
     }
 
 }
