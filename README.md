@@ -67,6 +67,7 @@ java -jar mission-0.0.1-SNAPSHOT.jar
 - Lombok
 ---
 ## API Docs
+- Swagger API Docs 확인 -> http://localhost:8080/swagger-ui.html#/
 ![images/s1.png](image/s1.PNG)
 
 ### 타입
