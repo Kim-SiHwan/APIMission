@@ -1,9 +1,10 @@
-package kim.sihwan.mission.api;
+package kim.sihwan.mission.api.impl;
 
-import kim.sihwan.mission.common.UrlType;
-import kim.sihwan.mission.dto.ProductInfo;
+import kim.sihwan.mission.api.FruitApi;
+import kim.sihwan.mission.dto.response.FruitResponseDto;
+import kim.sihwan.mission.exception.customException.FruitNotFoundException;
+import kim.sihwan.mission.util.UrlType;
 import kim.sihwan.mission.exception.customException.ApiServerException;
-import kim.sihwan.mission.exception.customException.ProductNotFoundException;
 import kim.sihwan.mission.exception.customException.UnknownServerException;
 import kim.sihwan.mission.util.CustomDecoder;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,20 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FruitImpl implements RootApi {
+public class FruitImpl implements FruitApi {
 
     private final CustomDecoder decoder;
     private final RestTemplate restTemplate;
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public List<String> requestProductList() {
+    public List<String> requestFruitList() {
         String encodedApiUrl = UrlType.FRUIT_LIST.getEncodedUrl();
         return sendRequestFruitList(encodedApiUrl);
     }
 
     @Override
-    public ProductInfo requestProductInfo(final String name) {
+    public FruitResponseDto requestFruitInfo(final String name) {
         String encodedApiUrl = UrlType.FRUIT_INFO.getEncodedUrl();
         return sendRequestFruitInfo(encodedApiUrl, name);
     }
@@ -90,7 +91,7 @@ public class FruitImpl implements RootApi {
         return responseEntity.getBody();
     }
 
-    private ProductInfo sendRequestFruitInfo(final String encodedApiUrl, final String name) {
+    private FruitResponseDto sendRequestFruitInfo(final String encodedApiUrl, final String name) {
         String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl) + name;
         log.info("과일 정보 요청 URL -> {}", decodedApiUrl);
 
@@ -99,12 +100,12 @@ public class FruitImpl implements RootApi {
             responseEntity = restTemplate.exchange(decodedApiUrl, HttpMethod.GET, makeHeader(), new ParameterizedTypeReference<>() {});
             log.info("과일 정보 응답 데이터 -> {}", responseEntity.getBody());
         } catch (HttpClientErrorException.NotFound e) {
-            throw new ProductNotFoundException("존재하지 않는 상품을 요청했습니다.");
+            throw new FruitNotFoundException("목록에 존재하지 않는 과일을 요청했습니다.");
         }
 
         checkErrorStatus(responseEntity.getStatusCode());
         Map<String, String> map = responseEntity.getBody();
-        return ProductInfo.toDto(map.get("name"), map.get("price"));
+        return FruitResponseDto.toDto(map.get("name"), map.get("price"));
     }
 
     private HttpEntity<String> makeHeader() {
