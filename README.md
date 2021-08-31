@@ -3,6 +3,81 @@
 
 - 실시간 과일, 채소 가격을 조회할 수 있는 API 중계 웹 서버 어플리케이션을 개발
 ---
+
+## 디렉토리 구조
+```
+📦src
+ ┣ 📂main
+ ┃ ┣ 📂java
+ ┃ ┃ ┗ 📂kim
+ ┃ ┃ ┃ ┗ 📂sihwan
+ ┃ ┃ ┃ ┃ ┗ 📂mission
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂api -> 인터페이스
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂impl -> 인터페이스 구현체
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FruitImpl.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜VegetableImpl.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FruitApi.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜RootApi.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜VegetableApi.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂config -> 설정파일
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂redis -> Embedded Redis 설정
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EmbeddedRedisConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜EmbeddedRedisRepositoryConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂swagger -> Swagger2 설정
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜SwaggerConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WebConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller -> 컨트롤러 
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FruitController.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜TypeController.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜VegetableController.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ViewController.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto -> 응답 DTO
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂response
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FruitResponseDto.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜TypeResponseDto.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜VegetableResponseDto.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂exception -> 사용자 정의 예외 
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂customException
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ApiCookieException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ApiServerException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜BlankParameterException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FruitNotFoundException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InvalidProductTypeException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜UnknownServerException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜VegetableNotFoundException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ErrorResponseDto.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ErrorCode.java -> Enum 으로 관리
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜GlobalExceptionHandler.java -> 사용자 정의 예외를 전역으로 처리
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂service -> 데이터를 요청하는 서비스
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FruitService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜VegetableService.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂util -> 상품 유형, URL 복호화, 암호화된 URL 관리
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CustomDecoder.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ProductType.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UrlType.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜MissionApplication.java
+ ┃ ┗ 📂resources
+ ┃ ┃ ┣ 📂templates
+ ┃ ┃ ┃ ┗ 📜main.html
+ ┃ ┃ ┗ 📜application.properties
+ ┗ 📂test
+ ┃ ┗ 📂java
+ ┃ ┃ ┗ 📂kim
+ ┃ ┃ ┃ ┗ 📂sihwan
+ ┃ ┃ ┃ ┃ ┗ 📂mission
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller -> 통합 테스트
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FruitControllerTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜TypeControllerTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜VegetableControllerTest.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂service -> 서비스 단 테스트 
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FruitServiceTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜VegetableServiceTest.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜MissionApplicationTests.java
+
+```
+---
+
 ## 실행 방법
 
 ```
@@ -14,7 +89,6 @@ java -jar mission-0.0.1-SNAPSHOT.jar
 ```
 
 ---
-
 ## 요구사항 정리
 
 ### API 개발
@@ -51,6 +125,9 @@ java -jar mission-0.0.1-SNAPSHOT.jar
   - [X] 입력폼
   - [X] 조회
   - [X] 현재가격 출력
+  
+실행 Flow
+![images/webFlow.gif](image/webFlow.gif)
 ---
 ## 개발 환경
 
