@@ -1,6 +1,5 @@
 package kim.sihwan.mission.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,12 +7,10 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@Slf4j
 @Configuration
 @EnableRedisRepositories
-public class RedisRepositoryConfiguration {
+public class EmbeddedRedisRepositoryConfig {
     @Value("${spring.redis.host}")
     private String redisHost;
 
@@ -29,7 +26,6 @@ public class RedisRepositoryConfiguration {
     public RedisTemplate<?, ?> redisTemplate() {
         RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
         return redisTemplate;
     }
 }
