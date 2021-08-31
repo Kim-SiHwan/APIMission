@@ -57,6 +57,7 @@ TODO
 - Spring Boot 2.5.4
 - Spring Data Redis  
 - Thymeleaf
+- Swagger2
 - Lombok
 ---
 ## API Docs
