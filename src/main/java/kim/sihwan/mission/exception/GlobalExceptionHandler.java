@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -62,8 +63,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseDto(ErrorCode.UNKNOWN.getCode(), ErrorCode.UNKNOWN.getDesc()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ErrorResponseDto errorResponseDto(final String code,final String message) {
-        return new ErrorResponseDto(false, code, message);
-
+    @ExceptionHandler(BlankParameterException.class)
+    protected ResponseEntity<ErrorResponseDto> blankParameterException(BlankParameterException e) {
+        log.info("BlankParameterException : 비어있는 이름 입력 : {}", e.getMessage());
+        return new ResponseEntity<>(errorResponseDto(ErrorCode.NOT_BLANK.getCode(), ErrorCode.NOT_BLANK.getDesc()), HttpStatus.BAD_REQUEST);
     }
+
+    private ErrorResponseDto errorResponseDto(final String code, final String message) {
+        return new ErrorResponseDto(false, code, message);
+    }
+
 }

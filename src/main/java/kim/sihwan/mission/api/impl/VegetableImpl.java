@@ -94,7 +94,7 @@ public class VegetableImpl implements VegetableApi {
         }
 
         if (checkTokenIsEmptyOrNull(accessToken))
-            throw new ApiCookieException("쿠키에 존재하는 인증 토큰이 존재하지 않습니다.");
+            throw new ApiCookieException("쿠키에 인증 토큰이 존재하지 않습니다.");
 
         return accessToken;
     }
