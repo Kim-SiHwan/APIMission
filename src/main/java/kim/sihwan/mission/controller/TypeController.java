@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/type")
 public class TypeController {
 
-    @GetMapping
+    @GetMapping(produces = {"application/json; charset=UTF-8"})
     public List<TypeResponseDto> requestAllProductType(){
        return Arrays.stream(ProductType.values())
                 .map(p-> TypeResponseDto.toDto(p.toString().toLowerCase(),p.getType()))

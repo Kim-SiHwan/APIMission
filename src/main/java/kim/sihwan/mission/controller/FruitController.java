@@ -23,12 +23,12 @@ public class FruitController {
 
     private final FruitService fruitService;
 
-    @GetMapping
+    @GetMapping(produces = {"application/json; charset=UTF-8"})
     public ResponseEntity<List<String>> requestFruitList() {
         return new ResponseEntity<>(fruitService.requestFruitList(), HttpStatus.OK);
     }
 
-    @GetMapping("/detail")
+    @GetMapping(value = "/detail", produces = {"application/json; charset=UTF-8"})
     public ResponseEntity<FruitResponseDto> requestFruitInfo(@Valid ProductInfoRequestDto requestDto) {
         return new ResponseEntity<>(fruitService.requestFruitInfo(requestDto.getName()), HttpStatus.OK);
     }

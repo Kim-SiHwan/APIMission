@@ -22,12 +22,12 @@ public class VegetableController {
 
     private final VegetableService vegetableService;
 
-    @GetMapping
+    @GetMapping(produces = {"application/json; charset=UTF-8"})
     public ResponseEntity<List<String>> requestVegetableList() {
         return new ResponseEntity<>(vegetableService.requestVegetableList(), HttpStatus.OK);
     }
 
-    @GetMapping("/detail")
+    @GetMapping(value = "/detail", produces = {"application/json; charset=UTF-8"})
     public ResponseEntity<VegetableResponseDto> requestVegetableInfo(@Valid ProductInfoRequestDto requestDto) {
         return new ResponseEntity<>(vegetableService.requestVegetableInfo(requestDto.getName()), HttpStatus.OK);
     }
