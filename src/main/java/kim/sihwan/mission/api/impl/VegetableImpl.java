@@ -1,10 +1,11 @@
-package kim.sihwan.mission.api;
+package kim.sihwan.mission.api.impl;
 
-import kim.sihwan.mission.common.UrlType;
-import kim.sihwan.mission.dto.ProductInfo;
+import kim.sihwan.mission.api.VegetableApi;
+import kim.sihwan.mission.dto.response.VegetableResponseDto;
+import kim.sihwan.mission.util.UrlType;
 import kim.sihwan.mission.exception.customException.ApiCookieException;
 import kim.sihwan.mission.exception.customException.ApiServerException;
-import kim.sihwan.mission.exception.customException.ProductNotFoundException;
+import kim.sihwan.mission.exception.customException.VegetableNotFoundException;
 import kim.sihwan.mission.exception.customException.UnknownServerException;
 import kim.sihwan.mission.util.CustomDecoder;
 import lombok.RequiredArgsConstructor;
@@ -25,20 +26,20 @@ import java.util.regex.Pattern;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class VegetableImpl implements RootApi {
+public class VegetableImpl implements VegetableApi {
 
     private final CustomDecoder decoder;
     private final RestTemplate restTemplate;
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public List<String> requestProductList() {
+    public List<String> requestVegetableList() {
         final String encodedApiUrl = UrlType.VEGETABLE_LIST.getEncodedUrl();
         return sendRequestVegetableList(encodedApiUrl);
     }
 
     @Override
-    public ProductInfo requestProductInfo(final String name) {
+    public VegetableResponseDto requestVegetableInfo(final String name) {
         String encodedApiUrl = UrlType.VEGETABLE_INFO.getEncodedUrl();
         return sendRequestVegetableInfo(encodedApiUrl, name);
     }
@@ -110,7 +111,7 @@ public class VegetableImpl implements RootApi {
         return responseEntity.getBody();
     }
 
-    private ProductInfo sendRequestVegetableInfo(final String encodedApiUrl, final String name) {
+    private VegetableResponseDto sendRequestVegetableInfo(final String encodedApiUrl, final String name) {
         String decodedApiUrl = decoder.decodeApiUrl(encodedApiUrl) + name;
         log.info("채소 정보 요청 URL -> {}", decodedApiUrl);
         ResponseEntity<Map<String, String>> responseEntity = null;
@@ -118,12 +119,12 @@ public class VegetableImpl implements RootApi {
             responseEntity = restTemplate.exchange(decodedApiUrl, HttpMethod.GET, makeHeader(), new ParameterizedTypeReference<>() {});
             log.info("채소 정보 응답 데이터 -> {}", responseEntity.getBody());
         } catch (HttpClientErrorException.NotFound e) {
-            throw new ProductNotFoundException("존재하지 않는 상품을 요청했습니다.");
+            throw new VegetableNotFoundException("존재하지 않는 상품을 요청했습니다.");
         }
 
         checkErrorStatus(responseEntity.getStatusCode());
         Map<String, String> map = responseEntity.getBody();
-        return ProductInfo.toDto(map.get("name"), map.get("price"));
+        return VegetableResponseDto.toDto(map.get("name"), map.get("price"));
     }
 
     private HttpEntity<String> makeHeader() {
@@ -146,4 +147,5 @@ public class VegetableImpl implements RootApi {
     private boolean checkTokenIsEmptyOrNull(String accessToken) {
         return Strings.isBlank(accessToken);
     }
+
 }
