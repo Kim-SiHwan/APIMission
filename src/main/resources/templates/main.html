@@ -39,13 +39,14 @@
     $(document).on('ready', function (e) {
         let type;
         startWeb();
-
         $(document).on('click', '#requestProductInfoButton', function (e) {
             let targetName = $('#inputProductName').val();
             $.ajax({
                 url: '/api/v1/'+type+'/detail',
                 method: 'GET',
-                data: {type: type, name: targetName},
+                data:{
+                    name:targetName
+                },
                 success: function (res) {
                     $('#productName').html("<b>" + res.name + "의 현재 가격 : " + "</b>");
                     $('#productPrice').html("<b>" + res.price + "</b>");
