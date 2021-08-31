@@ -61,8 +61,23 @@ TODO
 - Lombok
 ---
 ## API Docs
+![images/s1.png](image/s1.PNG)
 
-TODO
+### 타입
+![images/s2.1.png](image/s2.1.PNG)
+![images/s2.2.png](image/s2.2.PNG)
+
+### 과일
+![images/s3.1.png](image/s3.1.PNG)
+![images/s3.2.png](image/s3.2.PNG)
+![images/s3.3.png](image/s3.3.PNG)
+![images/s3.4.png](image/s3.4.PNG)
+
+### 채소
+![images/s4.1.png](image/s4.1.PNG)
+![images/s4.2.png](image/s4.2.PNG)
+![images/s4.3.png](image/s4.3.PNG)
+![images/s4.4.png](image/s4.4.PNG)
 
 ---
 ## 고려 사항
