@@ -14,9 +14,8 @@
 <div class = "container">
     <div style = "margin-top: 350px">
         <select class = "form-select form-select-sm" id = "selectTypeList" style = "display: inline; height: 40px">
-            <option selected>상품 유형을 선택해주세요</option>
-            <option value = "과일">과일</option>
-            <option value = "채소">채소</option>
+            <option>상품 유형을 선택해주세요</option>
+
         </select>
         <input id = "inputProductName" type = "text" class = "form-control" style = "width: 300px; display: inline">
         <button class = "btn btn-primary" id = "requestProductInfoButton">조회</button>
@@ -39,10 +38,12 @@
 
     $(document).on('ready', function (e) {
         let type;
+        startWeb();
+
         $(document).on('click', '#requestProductInfoButton', function (e) {
             let targetName = $('#inputProductName').val();
             $.ajax({
-                url: '/api/v1/product/list',
+                url: '/api/v1/'+type+'/detail',
                 method: 'GET',
                 data: {type: type, name: targetName},
                 success: function (res) {
@@ -57,9 +58,8 @@
         $(document).on('change', '#selectTypeList', function (e) {
             type = $('#selectTypeList').val();
             $.ajax({
-                url: '/api/v1/product',
+                url: '/api/v1/'+type,
                 method: 'GET',
-                data: {type: type},
                 success: function (res) {
                     drawList(res)
                 },
@@ -68,7 +68,6 @@
                 }
             })
         })
-
         function drawList(data) {
             let str = "";
             for (let i = 0; i < data.length; i++) {
@@ -76,6 +75,28 @@
                 str += "<tr align='center'><td>" + (i + 1) + "</td>" + "<td>" + list + "</td></tr>";
             }
             $('#tbody').html(str);
+        }
+
+        function startWeb(){
+            $.ajax({
+                url: '/api/v1/type',
+                method: 'GET',
+                success: function (res) {
+                    drawTypeList(res)
+                },
+                error: function (err){
+                    alert("오류 발생");
+                }
+            })
+        }
+
+        function drawTypeList(data){
+            let str="<option selected>상품 유형을 선택해주세요</option>";
+            for(let i=0; i<data.length; i++){
+                let list = data[i];
+                str+="<option value='"+list.type+"'> "+list.value+"</option>";
+            }
+            $('#selectTypeList').html(str);
         }
 
     })
