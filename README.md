@@ -22,11 +22,11 @@ TODO
 - [X] 가격 조회
   - [X] 과일 가격
   - [X] 채소 가격
-- [ ] 기타
+- [X] 기타
   - [X] api 주소 인코딩
   - [X] 예외 처리 
   - [X] 파라미터 Validation
-  - [ ] Swagger 문서화
+  - [X] Swagger 문서화
   - [X] 토큰 관리  
     - [X] 토큰을 remote 저장소에 저장
   
