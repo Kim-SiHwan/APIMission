@@ -5,7 +5,13 @@
 ---
 ## 실행 방법
 
-TODO
+```
+git clone https://github.com/Kim-SiHwan/APIMission.git
+cd APIMission
+./mvnw package
+cd target
+java -jar mission-0.0.1-SNAPSHOT.jar
+```
 
 ---
 
