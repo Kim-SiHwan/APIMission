@@ -144,6 +144,7 @@ java -jar mission-0.0.1-SNAPSHOT.jar
 - Lombok
 ---
 ## API Docs
+- Swagger API Docs 확인 -> http://localhost:8080/swagger-ui.html#/
 ![images/s1.png](image/s1.PNG)
 
 ### 타입
@@ -170,7 +171,8 @@ java -jar mission-0.0.1-SNAPSHOT.jar
    
 - 캐싱
   - Redis 캐시를 통해 Token 발급 요청 감소
-  - 추후 서비스가 확장된다면 Remote 환경으로 구성 현재는 Embedded 
+  - Docker compose를 통해 Remote Redis와 Spring Boot를 연결해서 개발했으나 확인 편의성을 위해 Embedded로 변경
+  - 추후 확장하게 된다면 Remote 환경으로 구성해서 사용
  
 ---
 ### 커밋 컨벤션
