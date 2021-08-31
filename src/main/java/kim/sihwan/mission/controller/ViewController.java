@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping
 public class ViewController {
 
-    @GetMapping
-    public String home(){
+    @GetMapping("/main")
+    public String main(){
         return "main";
     }
 

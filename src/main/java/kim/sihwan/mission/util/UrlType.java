@@ -1,4 +1,4 @@
-package kim.sihwan.mission.common;
+package kim.sihwan.mission.util;
 
 import lombok.Getter;
 

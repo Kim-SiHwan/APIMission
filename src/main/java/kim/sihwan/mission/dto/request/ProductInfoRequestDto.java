@@ -1,4 +1,4 @@
-package kim.sihwan.mission.dto;
+package kim.sihwan.mission.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
