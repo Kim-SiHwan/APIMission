@@ -36,6 +36,6 @@ public class VegetableController {
         System.out.println("name : " + name);
         if (Strings.isBlank(name))
             throw new BlankParameterException("상품명은 필수값입니다");
-        return new ResponseEntity<>(vegetableService.requestVegetableInfo(name), HttpStatus.OK);
+        return new ResponseEntity<>(vegetableService.requestVegetableInfo(name.replace(" ","")), HttpStatus.OK);
     }
 }

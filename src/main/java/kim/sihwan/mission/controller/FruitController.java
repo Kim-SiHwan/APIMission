@@ -39,7 +39,7 @@ public class FruitController {
     public ResponseEntity<FruitResponseDto> requestFruitInfo(@RequestParam String name) {
         if(Strings.isBlank(name))
             throw new BlankParameterException("상품명은 필수값입니다");
-        return new ResponseEntity<>(fruitService.requestFruitInfo(name), HttpStatus.OK);
+        return new ResponseEntity<>(fruitService.requestFruitInfo(name.replace(" ","")), HttpStatus.OK);
     }
 
 }

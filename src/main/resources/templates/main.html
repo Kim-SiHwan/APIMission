@@ -40,7 +40,7 @@
         let type;
         startWeb();
         $(document).on('click', '#requestProductInfoButton', function (e) {
-            let targetName = $('#inputProductName').val();
+            let targetName = $('#inputProductName').val().trim();
             $.ajax({
                 url: '/api/v1/'+type+'/detail',
                 method: 'GET',
