@@ -55,7 +55,7 @@ TODO
 
 - Java 11
 - Spring Boot 2.5.4
-- Spring Data Redis  
+- Spring Data Redis ( Embedded Redis )
 - Thymeleaf
 - Swagger2
 - Lombok
