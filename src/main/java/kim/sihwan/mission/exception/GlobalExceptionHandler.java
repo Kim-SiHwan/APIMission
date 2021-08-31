@@ -32,10 +32,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseDto(ErrorCode.INVALID_TYPE.getCode(), ErrorCode.INVALID_TYPE.getDesc()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    protected ResponseEntity<ErrorResponseDto> productNotFoundException(ProductNotFoundException e) {
-        log.info("ProductNotFoundException : 존재하지 않는 품목을 입력 : {}", e.getMessage());
-        return new ResponseEntity<>(errorResponseDto(ErrorCode.PRODUCT_NOT_FOUND.getCode(), ErrorCode.PRODUCT_NOT_FOUND.getDesc()), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(VegetableNotFoundException.class)
+    protected ResponseEntity<ErrorResponseDto> vegetableNotFoundException(VegetableNotFoundException e) {
+        log.info("VegetableNotFoundException : 존재하지 않는 채소를 입력 : {}", e.getMessage());
+        return new ResponseEntity<>(errorResponseDto(ErrorCode.VEGETABLE_NOT_FOUND.getCode(), ErrorCode.VEGETABLE_NOT_FOUND.getDesc()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FruitNotFoundException.class)
+    protected ResponseEntity<ErrorResponseDto> fruitNotFoundException(FruitNotFoundException e) {
+        log.info("FruitNotFoundException : 존재하지 않는 과일을 입력 : {}", e.getMessage());
+        return new ResponseEntity<>(errorResponseDto(ErrorCode.FRUIT_NOT_FOUND.getCode(), ErrorCode.FRUIT_NOT_FOUND.getDesc()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ApiServerException.class)
