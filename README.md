@@ -81,8 +81,8 @@
 ## 실행 방법
 
 ```
-git clone https://github.com/Kim-SiHwan/APIMission.git
-cd APIMission
+git clone https://github.com/Kim-SiHwan/ApiMission.git
+cd ApiMission
 ./mvnw package
 cd target
 java -jar mission-0.0.1-SNAPSHOT.jar
